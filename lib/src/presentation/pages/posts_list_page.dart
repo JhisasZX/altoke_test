@@ -5,8 +5,20 @@ import '../../domain/repositories/post_repository.dart';
 import 'add_post_page.dart';
 import 'comments_page.dart';
 
-class PostsListPage extends StatelessWidget {
+class PostsListPage extends StatefulWidget {
   const PostsListPage({super.key});
+
+  @override
+  State<PostsListPage> createState() => _PostsListPageState();
+}
+
+class _PostsListPageState extends State<PostsListPage> {
+  @override
+  void initState() {
+    super.initState();
+    // Cargar posts cuando se accede a la página
+    context.read<PostsCubit>().fetchPosts();
+  }
 
   @override
   Widget build(BuildContext context) {

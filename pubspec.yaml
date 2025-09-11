@@ -19,6 +19,12 @@ dependencies:
   
   # Inyección de dependencias
   get_it: ^8.0.0
+  
+  # URL Launcher para abrir enlaces externos
+  url_launcher: ^6.3.1
+  
+  # SVG support
+  flutter_svg: ^2.0.10+1
 
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
@@ -35,3 +41,6 @@ dev_dependencies:
 flutter:
 
   uses-material-design: true
+  
+  assets:
+    - assets/images/svg/

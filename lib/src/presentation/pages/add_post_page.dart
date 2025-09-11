@@ -24,22 +24,44 @@ class _AddPostPageState extends State<AddPostPage> {
 
   void _submit() async {
     if (!_formKey.currentState!.validate()) return;
-    final cubit = context.read<PostsCubit>();
-    await cubit.addPost(
-        title: _titleCtl.text.trim(),
-        body: _bodyCtl.text.trim(),
-        userId: int.parse(_userIdCtl.text.trim()));
 
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Post guardado exitosamente')));
-    Navigator.pop(context);
+    try {
+      final cubit = context.read<PostsCubit>();
+      await cubit.addPost(
+          title: _titleCtl.text.trim(),
+          body: _bodyCtl.text.trim(),
+          userId: int.parse(_userIdCtl.text.trim()));
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Post guardado exitosamente')));
+      Navigator.pop(context);
+    } catch (e) {
+      if (!mounted) return;
+      String errorMessage = 'Error al guardar el post';
+
+      if (e is FormatException) {
+        errorMessage =
+            'El ID de usuario contiene un valor inválido. Por favor, ingrese un número válido.';
+      } else if (e.toString().contains('Positive input exceeds the limit')) {
+        errorMessage =
+            'El ID de usuario es demasiado grande. Por favor, ingrese un número más pequeño.';
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(errorMessage),
+        backgroundColor: Colors.red,
+      ));
+    }
   }
 
-  // Validación para solo caracteres (sin números ni caracteres especiales)
-  String? _validateOnlyCharacters(String? value) {
+  // Validación para solo caracteres con límite de longitud
+  String? _validateOnlyCharacters(String? value, {int maxLength = 100}) {
     if (value == null || value.isEmpty) {
       return 'Este campo es requerido';
+    }
+    if (value.length > maxLength) {
+      return 'Máximo $maxLength caracteres permitidos';
     }
     if (!RegExp(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$').hasMatch(value)) {
       return 'Solo se permiten caracteres, los números y caracteres especiales no son permitidos';
@@ -47,7 +69,7 @@ class _AddPostPageState extends State<AddPostPage> {
     return null;
   }
 
-  // Validación para solo números
+  // Validación para solo números con límite de 4 dígitos
   String? _validateOnlyNumbers(String? value) {
     if (value == null || value.isEmpty) {
       return 'Este campo es requerido';
@@ -55,6 +77,22 @@ class _AddPostPageState extends State<AddPostPage> {
     if (!RegExp(r'^\d+$').hasMatch(value)) {
       return 'Solo se permiten números';
     }
+
+    // Verificar que no exceda 4 dígitos
+    if (value.length > 4) {
+      return 'Máximo 4 dígitos permitidos';
+    }
+
+    // Verificar que el número sea positivo
+    try {
+      final intValue = int.parse(value);
+      if (intValue < 0) {
+        return 'El valor debe ser positivo';
+      }
+    } catch (e) {
+      return 'Número inválido';
+    }
+
     return null;
   }
 
@@ -85,8 +123,11 @@ class _AddPostPageState extends State<AddPostPage> {
                   decoration: const InputDecoration(
                     labelText: 'Título',
                     border: OutlineInputBorder(),
+                    helperText: 'Máximo 50 caracteres',
                   ),
-                  validator: _validateOnlyCharacters,
+                  maxLength: 50,
+                  validator: (value) =>
+                      _validateOnlyCharacters(value, maxLength: 50),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -94,9 +135,12 @@ class _AddPostPageState extends State<AddPostPage> {
                   decoration: const InputDecoration(
                     labelText: 'Descripción',
                     border: OutlineInputBorder(),
+                    helperText: 'Máximo 200 caracteres',
                   ),
                   maxLines: 4,
-                  validator: _validateOnlyCharacters,
+                  maxLength: 200,
+                  validator: (value) =>
+                      _validateOnlyCharacters(value, maxLength: 200),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -104,8 +148,10 @@ class _AddPostPageState extends State<AddPostPage> {
                   decoration: const InputDecoration(
                     labelText: 'Id de usuario',
                     border: OutlineInputBorder(),
+                    helperText: 'Máximo 4 dígitos',
                   ),
                   keyboardType: TextInputType.number,
+                  maxLength: 4, // Límite de 5 dígitos
                   validator: _validateOnlyNumbers,
                 ),
                 const SizedBox(height: 24),

@@ -5,6 +5,7 @@ import 'src/data/datasources/post_remote_datasource.dart';
 import 'src/data/repositories/post_repository_impl.dart';
 import 'src/domain/repositories/post_repository.dart';
 import 'src/presentation/cubit/posts_cubit.dart';
+import 'src/presentation/pages/welcome_page.dart';
 import 'src/presentation/pages/posts_list_page.dart';
 
 void main() {
@@ -24,10 +25,10 @@ class MyApp extends StatelessWidget {
     return RepositoryProvider<PostRepository>.value(
       value: repository,
       child: BlocProvider(
-        create: (_) => PostsCubit(repository)..fetchPosts(),
+        create: (_) => PostsCubit(repository),
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Altoke Test',
+          title: 'Post-it',
           theme: ThemeData(
             primarySwatch: Colors.blue,
             primaryColor: Colors.blue,
@@ -47,8 +48,9 @@ class MyApp extends StatelessWidget {
               selectionHandleColor: Colors.blue,
             ),
           ),
+          home: const WelcomePage(),
           routes: {
-            '/': (_) => const PostsListPage(),
+            '/posts': (_) => const PostsListPage(),
           },
         ),
       ),
