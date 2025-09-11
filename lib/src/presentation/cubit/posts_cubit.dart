@@ -40,10 +40,14 @@ class PostsCubit extends Cubit<PostsState> {
     }
   }
 
-  Future<void> addPost({required String title, required String body}) async {
+  Future<void> addPost(
+      {required String title,
+      required String body,
+      required int userId}) async {
     try {
-      final newPost = Post(id: 0, userId: 1, title: title, body: body);
+      final newPost = Post(id: 0, userId: userId, title: title, body: body);
       final created = await repository.addPost(newPost);
+      // El post se agrega como primer elemento de la lista
       final updated = [created, ...state.posts];
       emit(state.copyWith(status: PostsStatus.loaded, posts: updated));
     } catch (e) {
