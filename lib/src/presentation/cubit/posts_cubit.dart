@@ -5,7 +5,7 @@ import '../../domain/usecases/get_posts_usecase.dart';
 import '../../domain/usecases/add_post_usecase.dart';
 import '../../core/errors/app_errors.dart';
 
-enum PostsStatus { initial, loading, loaded, error }
+enum PostsStatus { initial, loading, loaded, error, noInternet }
 
 class PostsState extends Equatable {
   final PostsStatus status;
@@ -39,14 +39,37 @@ class PostsCubit extends Cubit<PostsState> {
 
   Future<void> fetchPosts() async {
     emit(state.copyWith(status: PostsStatus.loading));
+
     try {
       final posts = await getPostsUseCase.call();
       emit(state.copyWith(status: PostsStatus.loaded, posts: posts));
     } on AppError catch (e) {
-      emit(state.copyWith(status: PostsStatus.error, message: e.message));
+      // Verificar si es un error de conectividad
+      if (e.message.toLowerCase().contains('network') ||
+          e.message.toLowerCase().contains('connection') ||
+          e.message.toLowerCase().contains('internet') ||
+          e.message.toLowerCase().contains('timeout')) {
+        emit(state.copyWith(
+            status: PostsStatus.noInternet,
+            message: 'Sin conexión a internet'));
+      } else {
+        emit(state.copyWith(status: PostsStatus.error, message: e.message));
+      }
     } catch (e) {
-      emit(state.copyWith(
-          status: PostsStatus.error, message: 'Error inesperado: $e'));
+      // Verificar si es un error de conectividad
+      final errorMessage = e.toString().toLowerCase();
+      if (errorMessage.contains('network') ||
+          errorMessage.contains('connection') ||
+          errorMessage.contains('internet') ||
+          errorMessage.contains('timeout') ||
+          errorMessage.contains('socket')) {
+        emit(state.copyWith(
+            status: PostsStatus.noInternet,
+            message: 'Sin conexión a internet'));
+      } else {
+        emit(state.copyWith(
+            status: PostsStatus.error, message: 'Error inesperado: $e'));
+      }
     }
   }
 

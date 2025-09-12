@@ -56,6 +56,9 @@ class _PostsListPageState extends State<PostsListPage> {
           if (state.status == PostsStatus.loading) {
             return const Center(child: CircularProgressIndicator());
           }
+          if (state.status == PostsStatus.noInternet) {
+            return _buildNoInternetWidget(context);
+          }
           if (state.status == PostsStatus.error) {
             return Center(child: Text(state.message ?? 'Error'));
           }
@@ -108,6 +111,67 @@ class _PostsListPageState extends State<PostsListPage> {
         onPressed: () => Navigator.push(
             context, MaterialPageRoute(builder: (_) => const AddPostPage())),
         child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget _buildNoInternetWidget(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.wifi_off,
+              size: 80,
+              color: Colors.grey,
+            ),
+            const SizedBox(height: 24),
+            // Mensaje
+            const Text(
+              'Sin conexión a internet',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Verifica tu conexión y vuelve a intentar',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
+            // Botón para actualizar
+            ElevatedButton.icon(
+              onPressed: () {
+                context.read<PostsCubit>().fetchPosts();
+              },
+              icon: const Icon(Icons.refresh, color: Colors.white),
+              label: const Text('Actualizar'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                foregroundColor: Colors.white,
+                minimumSize: const Size(120, 48),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                textStyle: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

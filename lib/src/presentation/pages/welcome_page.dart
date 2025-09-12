@@ -70,7 +70,7 @@ class WelcomePage extends StatelessWidget {
                 ),
                 const SizedBox(height: 60),
                 SizedBox(
-                  width: double.infinity,
+                  width: 200,
                   height: 56,
                   child: ElevatedButton(
                     onPressed: () {
@@ -79,9 +79,9 @@ class WelcomePage extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: Colors.blue,
-                      minimumSize: const Size.fromHeight(48),
+                      minimumSize: const Size(120, 48),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 12),
+                          horizontal: 16, vertical: 12),
                       elevation: 8,
                       shadowColor: Colors.black.withValues(alpha: 0.3),
                       shape: RoundedRectangleBorder(
