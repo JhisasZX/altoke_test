@@ -39,10 +39,13 @@ class WelcomePage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: const Icon(
-                    Icons.post_add,
-                    size: 60,
-                    color: Colors.blue,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(30),
+                    child: SvgPicture.asset(
+                      'assets/images/app_icon.svg',
+                      width: 60,
+                      height: 60,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 40),
@@ -153,25 +156,11 @@ class _SocialButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.2),
-          borderRadius: BorderRadius.circular(25),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SvgPicture.asset(
-              svgPath,
-              width: 20,
-              height: 20,
-              colorFilter: const ColorFilter.mode(
-                Colors.white,
-                BlendMode.srcIn,
-              ),
-            ),
-          ],
+        padding: const EdgeInsets.all(12),
+        child: SvgPicture.asset(
+          svgPath,
+          width: 32,
+          height: 32,
         ),
       ),
     );

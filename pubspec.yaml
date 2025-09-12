@@ -1,5 +1,5 @@
 name: altoke_test
-description: "A new Flutter project."
+description: "Post-it - Tu idea, tu voz, tu post"
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
@@ -44,3 +44,23 @@ flutter:
   
   assets:
     - assets/images/svg/
+    - assets/images/app_icon.svg
+
+# Configuración para el icono de la app
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/app_icon.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/images/app_icon.png"
+    background_color: "#2196F3"
+    theme_color: "#1976D2"
+  windows:
+    generate: true
+    image_path: "assets/images/app_icon.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/images/app_icon.png"
