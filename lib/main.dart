@@ -5,6 +5,7 @@ import 'src/data/datasources/post_remote_datasource.dart';
 import 'src/data/repositories/post_repository_impl.dart';
 import 'src/domain/repositories/post_repository.dart';
 import 'src/presentation/cubit/posts_cubit.dart';
+import 'src/presentation/pages/splash_page.dart';
 import 'src/presentation/pages/welcome_page.dart';
 import 'src/presentation/pages/posts_list_page.dart';
 
@@ -48,8 +49,9 @@ class MyApp extends StatelessWidget {
               selectionHandleColor: Colors.blue,
             ),
           ),
-          home: const WelcomePage(),
+          home: const SplashPage(),
           routes: {
+            '/welcome': (_) => const WelcomePage(),
             '/posts': (_) => const PostsListPage(),
           },
         ),
