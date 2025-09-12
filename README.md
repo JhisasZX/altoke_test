@@ -189,16 +189,16 @@ flutter pub run flutter_lints
 ## 📱 Capturas de Pantalla
 
 ### Pantalla de Bienvenida
-![Welcome Screen](screenshots/welcome.png)
+<img src="screenshots/welcome.png" alt="Welcome Screen" width="250">
 
 ### Lista de Posts
-![Posts List](screenshots/post_list.png)
+<img src="screenshots/post_list.png" alt="Posts List" width="250">
 
 ### Agregar Post
-![Add Post](screenshots/add_post.png)
+<img src="screenshots/add_post.png" alt="Add Post" width="250">
 
 ### Comentarios
-![Comments](screenshots/comments.png)
+<img src="screenshots/comments.png" alt="Comments" width="250">
 
 ## 🚀 Funcionalidades Implementadas
 
