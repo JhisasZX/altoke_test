@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/posts_cubit.dart';
+import '../cubit/theme_cubit.dart';
 import '../../domain/repositories/post_repository.dart';
 import 'add_post_page.dart';
 import 'comments_page.dart';
@@ -33,6 +34,22 @@ class _PostsListPageState extends State<PostsListPage> {
         ),
         centerTitle: false,
         backgroundColor: Colors.blue,
+        actions: [
+          BlocBuilder<ThemeCubit, ThemeState>(
+            builder: (context, themeState) {
+              return IconButton(
+                icon: Icon(
+                  themeState.isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  context.read<ThemeCubit>().toggleTheme();
+                },
+                tooltip: themeState.isDarkMode ? 'Modo claro' : 'Modo oscuro',
+              );
+            },
+          ),
+        ],
       ),
       body: BlocBuilder<PostsCubit, PostsState>(
         builder: (context, state) {

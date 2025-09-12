@@ -1,7 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../../domain/entities/post.dart';
-import '../../domain/repositories/post_repository.dart';
+import '../../domain/usecases/get_posts_usecase.dart';
+import '../../domain/usecases/add_post_usecase.dart';
+import '../../core/errors/app_errors.dart';
 
 enum PostsStatus { initial, loading, loaded, error }
 
@@ -27,31 +29,46 @@ class PostsState extends Equatable {
 }
 
 class PostsCubit extends Cubit<PostsState> {
-  final PostRepository repository;
-  PostsCubit(this.repository) : super(const PostsState());
+  final GetPostsUseCase getPostsUseCase;
+  final AddPostUseCase addPostUseCase;
+
+  PostsCubit({
+    required this.getPostsUseCase,
+    required this.addPostUseCase,
+  }) : super(const PostsState());
 
   Future<void> fetchPosts() async {
     emit(state.copyWith(status: PostsStatus.loading));
     try {
-      final posts = await repository.getPosts();
+      final posts = await getPostsUseCase.call();
       emit(state.copyWith(status: PostsStatus.loaded, posts: posts));
+    } on AppError catch (e) {
+      emit(state.copyWith(status: PostsStatus.error, message: e.message));
     } catch (e) {
-      emit(state.copyWith(status: PostsStatus.error, message: e.toString()));
+      emit(state.copyWith(
+          status: PostsStatus.error, message: 'Error inesperado: $e'));
     }
   }
 
-  Future<void> addPost(
-      {required String title,
-      required String body,
-      required int userId}) async {
+  Future<void> addPost({
+    required String title,
+    required String body,
+    required int userId,
+  }) async {
     try {
-      final newPost = Post(id: 0, userId: userId, title: title, body: body);
-      final created = await repository.addPost(newPost);
+      final created = await addPostUseCase.call(
+        title: title,
+        body: body,
+        userId: userId,
+      );
       // El post se agrega como primer elemento de la lista
       final updated = [created, ...state.posts];
       emit(state.copyWith(status: PostsStatus.loaded, posts: updated));
+    } on AppError catch (e) {
+      emit(state.copyWith(status: PostsStatus.error, message: e.message));
     } catch (e) {
-      emit(state.copyWith(status: PostsStatus.error, message: e.toString()));
+      emit(state.copyWith(
+          status: PostsStatus.error, message: 'Error inesperado: $e'));
     }
   }
 }

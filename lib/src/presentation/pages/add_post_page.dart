@@ -55,7 +55,7 @@ class _AddPostPageState extends State<AddPostPage> {
     }
   }
 
-  // Validación para solo caracteres con límite de longitud
+  // Validación para solo caracteres con límite de longitud (para título)
   String? _validateOnlyCharacters(String? value, {int maxLength = 100}) {
     if (value == null || value.isEmpty) {
       return 'Este campo es requerido';
@@ -64,7 +64,18 @@ class _AddPostPageState extends State<AddPostPage> {
       return 'Máximo $maxLength caracteres permitidos';
     }
     if (!RegExp(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$').hasMatch(value)) {
-      return 'Solo se permiten caracteres, los números y caracteres especiales no son permitidos';
+      return 'Los números y caracteres especiales no son permitidos';
+    }
+    return null;
+  }
+
+  // Validación para descripción (permite números y caracteres especiales)
+  String? _validateDescription(String? value, {int maxLength = 200}) {
+    if (value == null || value.isEmpty) {
+      return 'Este campo es requerido';
+    }
+    if (value.length > maxLength) {
+      return 'Máximo $maxLength caracteres permitidos';
     }
     return null;
   }
@@ -118,6 +129,7 @@ class _AddPostPageState extends State<AddPostPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                const SizedBox(height: 20),
                 TextFormField(
                   controller: _titleCtl,
                   decoration: const InputDecoration(
@@ -140,7 +152,7 @@ class _AddPostPageState extends State<AddPostPage> {
                   maxLines: 4,
                   maxLength: 200,
                   validator: (value) =>
-                      _validateOnlyCharacters(value, maxLength: 200),
+                      _validateDescription(value, maxLength: 200),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(

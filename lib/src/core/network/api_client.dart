@@ -1,14 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import '../constants/app_constants.dart';
 
 class ApiClient {
   final Dio dio;
   ApiClient({Dio? dioClient})
       : dio = dioClient ??
             Dio(BaseOptions(
-              baseUrl: 'https://jsonplaceholder.typicode.com',
-              connectTimeout: const Duration(seconds: 10),
-              receiveTimeout: const Duration(seconds: 10),
+              baseUrl: AppConstants.baseUrl,
+              connectTimeout: AppConstants.connectTimeout,
+              receiveTimeout: AppConstants.receiveTimeout,
+              headers: AppConstants.defaultHeaders,
             )) {
     _setupInterceptors();
   }
@@ -20,7 +22,7 @@ class ApiClient {
         responseBody: true,
         requestHeader: true,
         responseHeader: false,
-        logPrint: (obj) => debugPrint('�� API: $obj'),
+        logPrint: (obj) => debugPrint('💚💚 API: $obj'),
       ));
     }
   }
